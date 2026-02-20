@@ -4,9 +4,9 @@ import Discord from "next-auth/providers/discord"
 
 export default {
     providers: [
-        Google,
-        GitHub,
-        Discord
+        Google(),
+        GitHub(),
+        Discord()
     ],
     callbacks: {
         async jwt({ token, user }) {

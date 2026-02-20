@@ -1,3 +1,4 @@
+import { login } from "@/lib/actions"
 import { signIn } from "@/auth"
 import Link from "next/link"
 
@@ -7,14 +8,7 @@ export default function LoginPage() {
             <div className="w-full max-w-md bg-white dark:bg-zinc-800 rounded-2xl shadow-xl p-8 space-y-6">
                 <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white">Iniciar Sesión</h1>
 
-                <form action={async (formData) => {
-                    "use server"
-                    try {
-                        await signIn("credentials", formData)
-                    } catch (error) {
-                        // Handle error
-                    }
-                }} className="space-y-4">
+                <form action={login} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
                         <input name="email" type="email" required className="w-full px-4 py-2 mt-1 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white" />

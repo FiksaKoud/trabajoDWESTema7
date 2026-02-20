@@ -14,6 +14,7 @@ export default async function Navbar() {
                 <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition">Inicio</Link>
                 <Link href="/viajes" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition">Viajes</Link>
                 <Link href="/conductores" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition">Conductores</Link>
+                <Link href="/pasajeros" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition">Pasajeros</Link>
 
                 {session && (
                     <>

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
-import { deleteConductor, createConductor } from "@/lib/transportActions"
+import { deleteConductor, createConductor, updateConductor } from "@/lib/transportActions"
+import EditDropdown from "@/components/EditDropdown"
 
 export default async function ConductoresPage() {
     const session = await auth()
@@ -35,9 +36,18 @@ export default async function ConductoresPage() {
                         <p className="mt-4 text-sm text-gray-400 font-medium uppercase tracking-wider">{c.viajes.length} Viajes completados</p>
 
                         {isAdmin && (
-                            <form action={async () => { "use server"; await deleteConductor(c.id) }} className="mt-6 pt-4 border-t border-gray-100 dark:border-zinc-700">
-                                <button className="text-red-500 hover:text-red-700 text-sm font-medium">Dar de baja</button>
-                            </form>
+                            <div className="mt-6 space-y-4">
+                                <EditDropdown title="Editar">
+                                    <form action={async (formData) => { "use server"; await updateConductor(c.id, formData) }} className="space-y-2 text-left">
+                                        <input name="nombre" defaultValue={c.nombre} required className="w-full p-1 text-sm border rounded dark:bg-zinc-700" />
+                                        <input name="telefono" defaultValue={c.telefono || ''} className="w-full p-1 text-sm border rounded dark:bg-zinc-700" />
+                                        <button className="w-full bg-blue-600 text-white p-1 text-sm rounded">Guardar</button>
+                                    </form>
+                                </EditDropdown>
+                                <form action={async () => { "use server"; await deleteConductor(c.id) }}>
+                                    <button className="text-red-500 hover:text-red-700 text-sm font-medium">Dar de baja</button>
+                                </form>
+                            </div>
                         )}
                     </div>
                 ))}

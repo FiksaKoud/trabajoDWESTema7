@@ -1,4 +1,4 @@
-"use strict"
+"use server"
 
 import { signIn, signOut } from "@/auth"
 import { prisma } from "@/lib/prisma"
