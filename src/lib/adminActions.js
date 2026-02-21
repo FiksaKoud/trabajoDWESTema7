@@ -26,7 +26,6 @@ export async function updateUser(userId, data) {
             name: data.name,
             email: data.email,
             role: data.role,
-            active: data.active === "true"
         }
     })
     revalidatePath("/admin/users")
