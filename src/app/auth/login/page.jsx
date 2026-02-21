@@ -1,12 +1,39 @@
+"use client"
+
 import { login } from "@/lib/actions"
-import { signIn } from "@/auth"
+import { signIn } from "next-auth/react" // Use client-side signIn for the buttons
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 
 export default function LoginPage() {
+    const searchParams = useSearchParams()
+    const error = searchParams.get("error")
+
+    const getErrorMessage = (error) => {
+        switch (error) {
+            case "OAuthAccountNotLinked":
+                return "Este email ya está vinculado a otra cuenta. Inicia sesión con el método original."
+            case "OAuthCallbackError":
+                return "Se canceló el inicio de sesión o hubo un problema con el proveedor."
+            case "AccessDenied":
+                return "Acceso denegado. Debes autorizar la aplicación para entrar."
+            case "CredentialsSignin":
+                return "Email o contraseña incorrectos."
+            default:
+                return "Ocurrió un error inesperado en la autenticación."
+        }
+    }
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-zinc-900 p-6">
             <div className="w-full max-w-md bg-white dark:bg-zinc-800 rounded-2xl shadow-xl p-8 space-y-6">
                 <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white">Iniciar Sesión</h1>
+
+                {error && (
+                    <div className="p-3 text-sm text-red-500 bg-red-100 border border-red-200 rounded-lg">
+                        {getErrorMessage(error)}
+                    </div>
+                )}
 
                 <form action={login} className="space-y-4">
                     <div>
@@ -32,21 +59,24 @@ export default function LoginPage() {
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">
-                    <form action={async () => { "use server"; await signIn("google") }}>
-                        <button className="flex items-center justify-center w-full p-2 border rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition">
-                            <img src="https://authjs.dev/img/providers/google.svg" className="h-5 w-5" alt="Google" />
-                        </button>
-                    </form>
-                    <form action={async () => { "use server"; await signIn("github") }}>
-                        <button className="flex items-center justify-center w-full p-2 border rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition">
-                            <img src="https://authjs.dev/img/providers/github.svg" className="h-5 w-5" alt="Github" />
-                        </button>
-                    </form>
-                    <form action={async () => { "use server"; await signIn("discord") }}>
-                        <button className="flex items-center justify-center w-full p-2 border rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition">
-                            <img src="https://authjs.dev/img/providers/discord.svg" className="h-5 w-5" alt="Discord" />
-                        </button>
-                    </form>
+                    <button
+                        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                        className="flex items-center justify-center w-full p-2 border rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition"
+                    >
+                        <img src="https://authjs.dev/img/providers/google.svg" className="h-5 w-5" alt="Google" />
+                    </button>
+                    <button
+                        onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+                        className="flex items-center justify-center w-full p-2 border rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition"
+                    >
+                        <img src="https://authjs.dev/img/providers/github.svg" className="h-5 w-5" alt="Github" />
+                    </button>
+                    <button
+                        onClick={() => signIn("discord", { callbackUrl: "/dashboard" })}
+                        className="flex items-center justify-center w-full p-2 border rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition"
+                    >
+                        <img src="https://authjs.dev/img/providers/discord.svg" className="h-5 w-5" alt="Discord" />
+                    </button>
                 </div>
 
                 <p className="text-center text-sm text-gray-600 dark:text-gray-400">
