@@ -4,10 +4,13 @@ import { login } from "@/lib/actions"
 import { signIn } from "next-auth/react" // Use client-side signIn for the buttons
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
-export default function LoginPage() {
+function ErrorDisplay() {
     const searchParams = useSearchParams()
     const error = searchParams.get("error")
+
+    if (!error) return null
 
     const getErrorMessage = (error) => {
         switch (error) {
@@ -25,15 +28,21 @@ export default function LoginPage() {
     }
 
     return (
+        <div className="p-3 text-sm text-red-500 bg-red-100 border border-red-200 rounded-lg">
+            {getErrorMessage(error)}
+        </div>
+    )
+}
+
+export default function LoginPage() {
+    return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-zinc-900 p-6">
             <div className="w-full max-w-md bg-white dark:bg-zinc-800 rounded-2xl shadow-xl p-8 space-y-6">
                 <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white">Iniciar Sesión</h1>
 
-                {error && (
-                    <div className="p-3 text-sm text-red-500 bg-red-100 border border-red-200 rounded-lg">
-                        {getErrorMessage(error)}
-                    </div>
-                )}
+                <Suspense fallback={null}>
+                    <ErrorDisplay />
+                </Suspense>
 
                 <form action={login} className="space-y-4">
                     <div>
